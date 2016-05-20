@@ -16,7 +16,7 @@ DRAFTS_DIR="$BASE_DIR/_drafts"
 POSTS_DIR="$BASE_DIR/_posts"
 
 
-setup_colors() {
+setupColors() {
 	export RESET_ALL='\033[0m'
 	# export RESET_BOLD='\033[21m' # not working in OSX
 	export RESET_DIM='\033[22m'
@@ -71,7 +71,7 @@ setup_colors() {
 }
 
 
-setup_colors
+setupColors
 
 
 prompt() {
@@ -136,9 +136,9 @@ promptYesNo() {
 		read yesNo;
 		>&2 echo -en "${RESET_ALL}"
 		if [ "$yesNo" == "y" ] || [ "$yesNo" == "Y" ]; then
-			return 1;
-		elif [ "$yesNo" == "n" ] || [ "$yesNo" == "N" ]; then
 			return 0;
+		elif [ "$yesNo" == "n" ] || [ "$yesNo" == "N" ]; then
+			return 1;
 		fi
 	done
 }
@@ -161,7 +161,7 @@ promptAndRun() {
 }
 
 
-setup_ps3() {
+setupPS3() {
 	PS3=`promptHeader "$1" "$2"``echo -en "${STYLE_BOLD}${FG_GREEN}"`;
 }
 
@@ -194,7 +194,7 @@ POSTS_NAMES=""
 POSTS_LENGTH=0
 
 
-get_lines_count() {
+getLinesCount() {
 	array="$1"
 	nth="$2"
 
@@ -206,7 +206,7 @@ get_lines_count() {
 }
 
 
-get_nth_line() {
+getNthLine() {
 	array="$1"
 	nth="$2"
 
@@ -234,7 +234,7 @@ guardPostsAvailabe() {
 }
 
 
-list_drafts() {	
+listDrafts() {	
 	if [ `ls -1 "$DRAFTS_DIR" | wc -l` == "0" ]; then
 		DRAFTS_DATES=""
 		DRAFTS_NAMES=""
@@ -248,16 +248,16 @@ list_drafts() {
 		
 		DRAFTS_DATES=`echo "$files" | cut -d';' -f2`
 		DRAFTS_NAMES=`echo "$files" | cut -d';' -f3`
-		DRAFTS_LENGTH=`get_lines_count "$files"`
+		DRAFTS_LENGTH=`getLinesCount "$files"`
 
 		echoSection 'Drafts'
 
 		for i in $(seq $DRAFTS_LENGTH) ; do
-			the_date=`get_nth_line "$DRAFTS_DATES" "$i"`
-			the_name=`get_nth_line "$DRAFTS_NAMES" "$i"`
-			# echo "$the_date $the_name"
+			theDate=`getNthLine "$DRAFTS_DATES" "$i"`
+			theName=`getNthLine "$DRAFTS_NAMES" "$i"`
+			# echo "$theDate $theName"
 			printf "${FG_MAGENTA}%2d) " "$i"
-			echo -en "${RESET_FG}${FG_CYAN}$the_date${RESET_FG} $the_name"
+			echo -en "${RESET_FG}${FG_CYAN}$theDate${RESET_FG} $theName"
 
 			if [ "$i" == "1" ]; then
 				echo -e " ${FG_DARK_GRAY}[Newest]${RESET_FG}"
@@ -270,7 +270,7 @@ list_drafts() {
 }
 
 
-list_posts() {	
+listPosts() {	
 	if [ `ls -1 "$POSTS_DIR" | wc -l` == "0" ]; then
 		POSTS_DATES=""
 		POSTS_NAMES=""
@@ -284,16 +284,16 @@ list_posts() {
 		
 		POSTS_DATES=`echo "$files" | cut -d';' -f2`
 		POSTS_NAMES=`echo "$files" | cut -d';' -f3`
-		POSTS_LENGTH=`get_lines_count "$files"`
+		POSTS_LENGTH=`getLinesCount "$files"`
 
 		echoSection 'Posts'
 
 		for i in $(seq $POSTS_LENGTH) ; do
-			the_date=`get_nth_line "$POSTS_DATES" "$i"`
-			the_name=`get_nth_line "$POSTS_NAMES" "$i"`
-			# echo "$the_date $the_name"
+			theDate=`getNthLine "$POSTS_DATES" "$i"`
+			theName=`getNthLine "$POSTS_NAMES" "$i"`
+			# echo "$theDate $theName"
 			printf "${FG_MAGENTA}%2d) " "$i"
-			echo -en "${RESET_FG}${FG_CYAN}$the_date${RESET_FG} $the_name"
+			echo -en "${RESET_FG}${FG_CYAN}$theDate${RESET_FG} $theName"
 
 			if [ "$i" == "1" ]; then
 				echo -e " ${FG_DARK_GRAY}[Newest]${RESET_FG}"
@@ -306,7 +306,7 @@ list_posts() {
 }
 
 
-prompt_draft() {
+promptDraft() {
 	text="$1"
 	question="$2"
 
@@ -315,8 +315,8 @@ prompt_draft() {
 
 		if [ "$selected" != "" ] && (( "$selected" >= 1 )) && (( "$selected" <= $DRAFTS_LENGTH )); then
 			promptYesNo "$question"
-			if [ "$?" == "1" ]; then
-				get_nth_line "$DRAFTS_NAMES" "$selected"
+			if [ "$?" == "0" ]; then
+				getNthLine "$DRAFTS_NAMES" "$selected"
 				return 0
 			else
 				>&2 showInfoMessage '[Info]' 'No action'
@@ -330,7 +330,7 @@ prompt_draft() {
 }
 
 
-prompt_post() {
+promptPost() {
 	text="$1"
 	question="$2"
 
@@ -340,7 +340,7 @@ prompt_post() {
 		if [ "$selected" != "" ] && (( "$selected" >= 1 )) && (( "$selected" <= $POSTS_LENGTH )); then
 			promptYesNo "$question"
 			if [ "$?" == "1" ]; then
-				get_nth_line "$POSTS_NAMES" "$selected"
+				getNthLine "$POSTS_NAMES" "$selected"
 				return 0
 			else
 				>&2 showInfoMessage '[Info]' 'No action'
@@ -357,22 +357,22 @@ prompt_post() {
 ##########################################################################################
 
 
-run_jekyll_cmd() {
+runJekyllCmd() {
 	cd "$BASE_DIR";
 	$CMD "$@";
 	cd - > /dev/null;
 }
 
 
-run_feature_new() {
+runFeatureNew() {
 	showInfoMessage '[Info]' "Making new draft..."
 	name=`promptText "Name of the draft"`
-	run_jekyll_cmd draft "$name"
+	runJekyllCmd draft "$name"
 }
 
 
-run_feature_delete() {
-	prompt_draft "Delete draft" "Are you sure want to delete?" | {
+runFeatureDelete() {
+	promptDraft "Delete draft" "Are you sure want to delete?" | {
 		answer=`cat`
 		if [ "$answer" != "" ]; then
 			rm -v "${DRAFTS_DIR}/${answer}"
@@ -381,34 +381,34 @@ run_feature_delete() {
 }
 
 
-run_feature_publish() {
-	prompt_draft "Publish draft" "Are you sure want to publish?" | {
+runFeaturePublish() {
+	promptDraft "Publish draft" "Are you sure want to publish?" | {
 		answer=`cat`
 		if [ "$answer" != "" ]; then
-			run_jekyll_cmd publish "${DRAFTS_DIR}/${answer}"
+			runJekyllCmd publish "${DRAFTS_DIR}/${answer}"
 		fi
 	}
 }
 
 
-run_feature_unpublish() {
-	list_posts
+runFeatureUnpublish() {
+	listPosts
 
-	prompt_post "Unpublish post" "Are you sure want to unpublish?" | {
+	promptPost "Unpublish post" "Are you sure want to unpublish?" | {
 		answer=`cat`
 		if [ "$answer" != "" ]; then
-			run_jekyll_cmd unpublish "${POSTS_DIR}/${answer}"
+			runJekyllCmd unpublish "${POSTS_DIR}/${answer}"
 		fi
 	}
 }
 
 
-run_feature_commit() {
+runFeatureCommit() {
 	git status
 
 	promptYesNo "Commit only staged files?"
 
-	if [ "$?" == "1" ]; then
+	if [ "$?" == "0" ]; then
 		git commit -m "Updated files"
 	else
 		>&2 showInfoMessage '[Info]' 'No action'
@@ -416,17 +416,29 @@ run_feature_commit() {
 }
 
 
-run_feature_serve() {
+runFeatureServe() {
 	showInfoMessage '[Info]' "Serving..."
-	run_jekyll_cmd serve --drafts
+	runJekyllCmd serve --drafts --config _config.yml,_config-dev.yml --trace
+	# runJekyllCmd serve --drafts --config _config.yml,_config-dev.yml
 }
 
 
-list_drafts_if_not_interactive() {
+runFeatureClean() {
+	promptYesNo "Clean project?"
+
+	if [ "$?" == "0" ]; then
+		runJekyllCmd clean
+	else
+		>&2 showInfoMessage '[Info]' 'No action'
+	fi
+}
+
+
+listDraftsIfNotInteractive() {
 	isInteractive="$1"
 
 	if [ "$isInteractive" == "" ]; then
-		list_drafts
+		listDrafts
 	fi
 }
 
@@ -437,39 +449,42 @@ FEATURE_PUBLISH_DRAFT="publish"
 FEATURE_UNPUBLISH_POSTS="unpublish"
 FEATURE_COMMIT="commit"
 FEATURE_SERVE_HTTP="serve"
-DISPLAY_FEATURES="(${FEATURE_NEW_DRAFT}|${FEATURE_DELETE_DRAFT}|${FEATURE_PUBLISH_DRAFT}|${FEATURE_UNPUBLISH_POSTS}|${FEATURE_COMMIT}|${FEATURE_SERVE_HTTP})"
+FEATURE_CLEAN="clean"
+DISPLAY_FEATURES="(${FEATURE_NEW_DRAFT}|${FEATURE_DELETE_DRAFT}|${FEATURE_PUBLISH_DRAFT}|${FEATURE_UNPUBLISH_POSTS}|${FEATURE_COMMIT}|${FEATURE_SERVE_HTTP}|${FEATURE_CLEAN})"
 
 
-run_feature() {
+runFeature() {
 	featureName="$1"
 	isInteractive="$2"
 
 	case "$featureName" in
 		"$FEATURE_NEW_DRAFT")
-			run_feature_new ;;
+			runFeatureNew ;;
 		"$FEATURE_DELETE_DRAFT")
-			list_drafts_if_not_interactive "$isInteractive"
-			run_feature_delete ;;
+			listDraftsIfNotInteractive "$isInteractive"
+			runFeatureDelete ;;
 		"$FEATURE_PUBLISH_DRAFT")
-			list_drafts_if_not_interactive "$isInteractive"
-			run_feature_publish ;;
+			listDraftsIfNotInteractive "$isInteractive"
+			runFeaturePublish ;;
 		"$FEATURE_UNPUBLISH_POSTS")
-			run_feature_unpublish ;;
+			runFeatureUnpublish ;;
 		"$FEATURE_COMMIT")
-			run_feature_commit ;;
+			runFeatureCommit ;;
 		"$FEATURE_SERVE_HTTP")
-			run_feature_serve ;;
+			runFeatureServe ;;
+		"$FEATURE_CLEAN")
+			runFeatureClean ;;
 		*)
 			showErrorMessage "[Error]" "Incorrect feature: $featureName"
 	esac
 }
 
 
-prompt_features_interactive() {
-	list_drafts
+promptFeaturesInteractive() {
+	listDrafts
 	echo
 
-	setup_ps3 "Choices" "(1/2/...)";
+	setupPS3 "Choices" "(1/2/...)";
 
 	DISPLAY_NEW_DRAFT="New draft"
 	DISPLAY_DELETE_DRAFT="Delete draft"
@@ -477,29 +492,33 @@ prompt_features_interactive() {
 	DISPLAY_UNPUBLISH_POSTS="Unpublish posts"
 	DISPLAY_COMMIT="Commit"
 	DISPLAY_SERVE_HTTP="Serve (HTTP)"
+	DISPLAY_CLEAN="Clean"
 
 	echoSection "Select features"
-	select choice in "$DISPLAY_NEW_DRAFT" "$DISPLAY_DELETE_DRAFT" "$DISPLAY_PUBLISH_DRAFT" "$DISPLAY_UNPUBLISH_POSTS" "$DISPLAY_COMMIT" "$DISPLAY_SERVE_HTTP"; do
+	select choice in "$DISPLAY_NEW_DRAFT" "$DISPLAY_DELETE_DRAFT" "$DISPLAY_PUBLISH_DRAFT" "$DISPLAY_UNPUBLISH_POSTS" "$DISPLAY_COMMIT" "$DISPLAY_SERVE_HTTP" "$DISPLAY_CLEAN"; do
 		echo -en "${RESET_ALL}";
 
 		case "$choice" in
 			"$DISPLAY_NEW_DRAFT")
-				run_feature "$FEATURE_NEW_DRAFT" "Y"
+				runFeature "$FEATURE_NEW_DRAFT" "Y"
 				break ;;
 			"$DISPLAY_DELETE_DRAFT")
-				run_feature "$FEATURE_DELETE_DRAFT" "Y"
+				runFeature "$FEATURE_DELETE_DRAFT" "Y"
 				break ;;
 			"$DISPLAY_PUBLISH_DRAFT")
-				run_feature "$FEATURE_PUBLISH_DRAFT" "Y"
+				runFeature "$FEATURE_PUBLISH_DRAFT" "Y"
 				break ;;
 			"$DISPLAY_UNPUBLISH_POSTS")
-				run_feature "$FEATURE_UNPUBLISH_POSTS" "Y"
+				runFeature "$FEATURE_UNPUBLISH_POSTS" "Y"
 				break ;;
 			"$DISPLAY_COMMIT")
-				run_feature "$FEATURE_COMMIT" "Y"
+				runFeature "$FEATURE_COMMIT" "Y"
 				break ;;
 			"$DISPLAY_SERVE_HTTP")
-				run_feature "$FEATURE_SERVE_HTTP" "Y"
+				runFeature "$FEATURE_SERVE_HTTP" "Y"
+				break ;;
+			"$DISPLAY_CLEAN")
+				runFeature "$FEATURE_CLEAN" "Y"
 				break ;;
 		esac
 	done
@@ -513,10 +532,10 @@ main() {
 		showInfoMessage "Usage:" "$0 ${DISPLAY_FEATURES}"
 
 	elif [ "$cmd" != "" ]; then
-		run_feature "$cmd"
+		runFeature "$cmd"
 
 	else
-		prompt_features_interactive
+		promptFeaturesInteractive
 
 	fi
 }

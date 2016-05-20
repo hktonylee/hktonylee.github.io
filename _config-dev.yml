@@ -1,0 +1,8 @@
+
+# incremental: true
+
+assets:
+  compress:
+    css: false
+    js: false
+  digest: false
