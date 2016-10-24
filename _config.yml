@@ -11,7 +11,7 @@
 title: Dimension Reduction
 email: blog@tonylee.hk
 description: > # this means to ignore newlines until "baseurl:"
-  My personal view on various technical stuff.
+  My opinion on various technical stuff.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "http://blog.tonylee.hk" # the base hostname & protocol for your site
 twitter_username: hktonylee
