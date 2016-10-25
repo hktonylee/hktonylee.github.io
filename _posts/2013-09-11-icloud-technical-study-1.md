@@ -5,7 +5,7 @@ date: 2013-09-11
 tags: icloud apple
 ---
 
-![iCloud Logo]({{ site.image_base }}/2013/09/11/iCloudLogo.png)
+![iCloud Logo]({{ site.image_base }}/2013/09/11/iCloudLogo.png){: .center }
 
 iCloud, the main focus of Apple in the coming decade, is undoubtedly one of the most complex cloud infrastructure in this world. The technical details of iCloud is not well known outside Apple. Plus I am an Apple fans (yeah!). I feel like unavoidable to study its architecture and present it to all of you.
 
