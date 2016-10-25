@@ -1,6 +1,9 @@
 
 # incremental: true
 
+url: "http://localhost:4000"
+image_base: "http://localhost:4000/assets"
+
 assets:
   compress:
     css: false

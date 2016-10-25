@@ -13,7 +13,8 @@ email: blog@tonylee.hk
 description: > # this means to ignore newlines until "baseurl:"
   My opinion on various technical stuff.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://blog.tonylee.hk" # the base hostname & protocol for your site
+url: "https://tonylee.github.io" # the base hostname & protocol for your site
+image_base: "https://tonylee.github.io/assets"
 twitter_username: hktonylee
 github_username:  hktonylee
 
