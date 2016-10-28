@@ -31,7 +31,7 @@ Whenever the inner function is called, the `this` refers to `SafeSubscriber` whi
 
 I checked this with Google Chrome debugger as shown below:
 
-![Google Chrome Debug]({{ site.image_base }}/2016/10/27/ChromeDebug.png){: .center }
+![Google Chrome Debug]({{ site.image_base }}/2016/10/27/ChromeDebug.png)
 
 It is well-known that in newest ECMAScript version, the arrow function captures `this` in lexical scope. So the `this` should capture `MainWindow` instead of `SafeSubscriber`.
 
@@ -39,10 +39,10 @@ So far I had not realized that this was the problem of Chrome. I still googled i
 
 Suddenly I checked the packed source of the site.
 
-![Site Source]({{ site.image_base }}/2016/10/27/RawCode.png){: .center }
+![Site Source]({{ site.image_base }}/2016/10/27/RawCode.png)
 
 And I guessed that the debugger in Google Chrome may not translate `this` into `_this2`. I tested my assumption and it really shocks me.
 
-![The Truth]({{ site.image_base }}/2016/10/27/TrueThis.png){: .center }
+![The Truth]({{ site.image_base }}/2016/10/27/TrueThis.png)
 
-Lesson learnt. Everything can go wrong. **And don't rely too much on browser when developing transpiled languages like ES2015.**
+Lesson learnt. Everything can go wrong. And don't rely too much on browser when developing transpiled languages like ES2015. **Always check the packed source before moving on to any serious debugging.**
