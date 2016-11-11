@@ -19,28 +19,20 @@ It is very easy to fix if the typings is already in the typings registry. Howeve
 
 # Step 1 - Create Typings Structure
 
-First of all we create `typings/custom/react-native-image-progress` directory and related files as shown below. And we also create file named `index.d.ts` where the real stuff stays.
+First of all we create `typings/custom/react-native-image-progress` directory and `index.d.ts` file as shown below.
 
     SomeApp
     ├── typings
-    │   ├── custom
-    │   │   ├── index.d.ts
-    │   │   └── react-native-image-progress
-    │   │       └── index.d.ts
-    │   └── index.d.ts
+    │   └── custom
+    │       └── react-native-image-progress
+    │           └── index.d.ts
     └── typings.json
 
-# Step 2 - Update the definition meta files
+# Step 2 - Update the typing definition files
 
-Add the following line to the start of `typings/index.d.ts`
+Add the following line to the `globalDependencies` in `typings.json`
 
-    /// <reference path="custom/index.d.ts" />
-
-Add this line to `typings/custom/index.d.ts`
-
-    /// <reference path="react-native-image-progress/index.d.ts" />
-
-# Step 3 - Update the real definition file
+    "react-native-image-progress": "file:typings/custom/react-native-image-progress/index.d.ts"
 
 Add the following content to `typings/custom/react-native-image-progress/index.d.ts`
 
@@ -66,5 +58,10 @@ Add the following content to `typings/custom/react-native-image-progress/index.d
 
     }
 
-Then you should compile `.ts` / `.tsx` files without problem.
+# Step 3 - Install the custom typing definition
 
+Run the following command
+
+    typings install
+
+After the above steps, you should now use the `*.ts` or `*.tsx` without any errors or warnings.
