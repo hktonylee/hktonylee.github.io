@@ -3,7 +3,7 @@ layout: post
 title: Making Async MySQL Executor Pool in Play 2.5
 ---
 
-The default Play 2.5 Java API does not support JPA call asynchronously properly. For example, you may sometimes see `java.lang.IllegalStateException: Session/EntityManager is closed` when using `jpaApi.withTransaction()` in `httpExecutionContext.current()`. The code snippet here:
+The default Play 2.5 Java API does not support JPA asynchronous call properly. For example, you may sometimes see `java.lang.IllegalStateException: Session/EntityManager is closed` when using `jpaApi.withTransaction()` in `httpExecutionContext.current()`. The code snippet here:
 
     return authProvider
         .verifyAccessToken(unverifedToken, httpExecutionContext.current())
@@ -46,7 +46,7 @@ To fix the problem, I made a customized executor to create new `EntityManager` e
 
     @ThreadSafe
     @Singleton
-    public class MySQLExecutor extends AppExecutor {
+    public class MySQLExecutor {
 
         private final ExecutorService executorService;
         private final JPAApi jpaApi;
