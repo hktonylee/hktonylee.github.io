@@ -17,6 +17,7 @@ url: "https://hktonylee.github.io" # the base hostname & protocol for your site
 image_base: "https://hktonylee.github.io/assets/images"
 twitter_username: hktonylee
 github_username:  hktonylee
+include_google_analytics: true
 
 # Build settings
 markdown: kramdown

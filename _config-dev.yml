@@ -3,6 +3,7 @@
 
 url: "http://localhost:4000"
 image_base: "http://localhost:4000/assets/images"
+include_google_analytics: false
 
 assets:
   compress:
