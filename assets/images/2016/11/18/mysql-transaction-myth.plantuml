@@ -1,0 +1,57 @@
+@startuml
+
+skinparam monochrome true
+skinparam BoxPadding 50
+
+box
+participant "Connection 1" as c1
+endbox
+box
+participant "Connection 2" as c2
+endbox
+
+rnote over c1
+    ""begin;""
+endrnote
+
+rnote over c2
+    ""begin;""
+endrnote
+
+====
+
+rnote over c1
+    ""select * from tbl;""
+endrnote
+note left of c1 : -- Here Connection 1 caches\nthe query result.
+
+...
+
+rnote over c2
+    ""update tbl set b = 4 where b = 2;""
+endrnote
+note right of c2 : -- Connection 2 will gain\nthe write lock for row ""b = 2""
+
+...
+
+rnote over c1
+    ""update tbl set b = 11 where b = 2;""
+endrnote
+note left of c1 : -- It will wait until Connection 2\nfinishes the transaction.
+
+...
+
+rnote over c2
+    ""commit;""
+endrnote
+note left of c1 : -- Because Connection 2 releases\nthe lock, MySQL returns\n"""0 rows affected""" instantly.
+
+====
+
+rnote over c1
+    ""select * from tbl;""
+endrnote
+
+note left of c1 : -- MySQL returns the above result.
+
+@enduml

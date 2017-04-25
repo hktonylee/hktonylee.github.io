@@ -3,7 +3,14 @@ layout: post
 title: MySQL Transaction Myth
 ---
 
-How can it possible?
+This article illustrates a common problem when using multiple connections in MySQL. This is related to how a DBMS uses isolation level to balance performance and correctness for concurrent transactions.
+
+The problem happens when you start a new transaction and query for some row. You then use the result to update the same row. But the database does not update as designed. 
+
+You may check the command line output here:
+
+	mysql> begin;
+	Query OK, 0 rows affected (0.00 sec)
 
 	mysql> select * from tbl;
 	+---+------+
@@ -27,27 +34,18 @@ How can it possible?
 	+---+------+
 	2 rows in set (0.00 sec)
 
-Answer: Because there are multiple transactions working on the same table; and the isolation is set to REPEATABLE-READ.
+	mysql> rollback;
+	Query OK, 0 rows affected (0.00 sec)
 
-To illustrate:
 
-	Connection 1                        Connection 2
-	==================================  ==================================
+Answer: Because there are multiple transactions working on the same row; and the isolation is set to REPEATABLE-READ.
 
-	begin;
-	                                    begin;
+This sequence diagram demostates how the problem occurs.
 
-	select * from tbl;
-	-- cache the tbl content ---------------------------------------------
+![Sequence Diagram]({{ site.image_base }}/2016/11/18/mysql-transaction-myth.png){: .center }
 
-	                                    update tbl set b = 4 where b = 2;
-	-------------------------------------- it will lock the whole table --
+Solution 1: The program has to gain pessimistic lock in the beginning of the transaction.
 
-	update tbl set b = 11 where b = 2;
-	-- it will wait until Connection 2 finish ----------------------------
+Solution 2: Worse solution. It is to set the isolation level to Serializable. But the performance will deteriorate.
 
-	                                    commit;
-	-- mysql returns "0 rows affected" -----------------------------------
-
-	select * from tbl;
-	-- this will show the cached rows ------------------------------------
+If the devloper does not understand fully the undelying mechanism, this can impose some hard-to-find bugs when they devlope business applications like table reservation or shopping cart.
