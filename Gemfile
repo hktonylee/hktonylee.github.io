@@ -5,6 +5,7 @@ source 'https://rubygems.org'
 
 group :jekyll_plugins do
 	gem 'json', '1.8.6'
+	gem 'nokogiri', '~> 1.8.1'
 	gem 'github-pages'
 	gem 'jekyll-compose'
 end
