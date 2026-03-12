@@ -29,3 +29,13 @@ grep -q 'window.scrollTo' assets/js/homepage.js
 grep -q 'function emitSweepWave' assets/js/homepage.js
 grep -q 'strokeRect' assets/js/homepage.js
 ! grep -q 'const wakes = \[\];' assets/js/homepage.js
+grep -q 'Return to home page' _layouts/post.html
+grep -q 'padding: 0;' _sass/_immersive.scss
+grep -q 'justify-content: flex-start;' _sass/_immersive.scss
+grep -q 'background: transparent;' _sass/_immersive.scss
+grep -q 'backdrop-filter: none;' _sass/_immersive.scss
+grep -q 'width: fit-content;' _sass/_immersive.scss
+grep -q 'border: 1px solid $signal-line-strong;' _sass/_immersive.scss
+! grep -q 'signal-post-rail' _layouts/post.html
+grep -q 'grid-template-columns: minmax(0, 1fr);' _sass/_immersive.scss
+! grep -q 'grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr);' _sass/_immersive.scss

@@ -351,17 +351,36 @@ body.signal-post {
 
 .signal-post-nav {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 1rem;
-  padding: 0.8rem 1rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  backdrop-filter: none;
 }
 
 .signal-post-nav__link {
+  display: inline-flex;
+  width: fit-content;
+  padding: 0.8rem 1rem;
+  border: 1px solid $signal-line-strong;
+  background: rgba(8, 13, 11, 0.72);
   font-size: 0.8rem;
   letter-spacing: 0.16em;
   text-decoration: none;
   text-transform: uppercase;
   color: $signal-muted;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.signal-post-nav__link:hover,
+.signal-post-nav__link:focus {
+  border-color: rgba(216, 255, 122, 0.7);
+  background: rgba(24, 32, 28, 0.92);
+  color: $signal-copy;
 }
 
 .signal-post-header {
@@ -387,23 +406,10 @@ body.signal-post {
 
 .signal-post-frame {
   display: grid;
-  grid-template-columns: minmax(10rem, 13rem) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: clamp(1rem, 3vw, 2rem);
   margin-top: 1rem;
   padding: clamp(1rem, 3vw, 2rem);
-}
-
-.signal-post-rail {
-  display: grid;
-  align-content: start;
-  gap: 0.5rem;
-  padding-right: 1rem;
-  border-right: 1px solid $signal-line;
-}
-
-.signal-post-rail__value {
-  margin-bottom: 1rem;
-  color: rgba(226, 235, 223, 0.82);
 }
 
 .signal-post-content {
@@ -445,11 +451,7 @@ body.signal-post {
   .signal-post-nav,
   .signal-post-header,
   .signal-post-frame {
-    max-width: 132rem;
-  }
-
-  .signal-post-frame {
-    grid-template-columns: minmax(8rem, 11rem) minmax(0, 1fr);
+    max-width: 148rem;
   }
 }
 
@@ -489,7 +491,7 @@ body.signal-post {
   }
 
   .signal-post-nav {
-    flex-direction: column;
+    gap: 0.75rem;
   }
 }
 
