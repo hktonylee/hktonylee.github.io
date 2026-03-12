@@ -3,8 +3,11 @@
   const canvas = document.getElementById("fluid-canvas");
   const heroCluster = document.querySelector(".signal-hero__cluster");
   const portalGrid = document.querySelector(".portal-grid");
+  const portalFieldLink = document.querySelector('a[href="#portal-grid"]');
   const interactiveElements = Array.from(
     document.querySelectorAll(".home-canvas a[href], .home-canvas button, .home-canvas [role='button']")
+  ).filter(
+    (element) => !element.closest(".post-portal")
   );
 
   if (!root || !canvas) {
@@ -137,11 +140,37 @@
     }
   }
 
+  function getPointerInfluence(rect, maxOffset, activationPadding = 20) {
+    if (!pointer.active) {
+      return { x: 0, y: 0 };
+    }
+
+    const centerX = rect.left + rect.width * 0.5;
+    const centerY = rect.top + rect.height * 0.5;
+    const deltaX = pointer.x - centerX;
+    const deltaY = pointer.y - centerY;
+    const distance = Math.hypot(deltaX, deltaY) || 1;
+    const outsideX = Math.max(rect.left - pointer.x, 0, pointer.x - rect.right);
+    const outsideY = Math.max(rect.top - pointer.y, 0, pointer.y - rect.bottom);
+    const borderDistance = Math.hypot(outsideX, outsideY);
+
+    if (borderDistance > activationPadding) {
+      return { x: 0, y: 0 };
+    }
+
+    const strength = 1 - borderDistance / activationPadding;
+
+    return {
+      x: (deltaX / distance) * maxOffset * strength,
+      y: (deltaY / distance) * maxOffset * strength
+    };
+  }
+
   function updatePortals(time) {
     portals.forEach((portal, index) => {
-      const xShift = pointer.active ? (pointer.x / window.innerWidth - 0.5) * (index % 3 === 0 ? 18 : 12) : 0;
-      const yShift = Math.sin(time + index * 0.7) * 6;
-      portal.style.transform = `translate3d(${xShift}px, ${yShift}px, 0)`;
+      const influence = getPointerInfluence(portal.getBoundingClientRect(), 7, 20);
+      const ambientY = Math.sin(time + index * 0.7) * 1.25;
+      portal.style.transform = `translate3d(${influence.x.toFixed(2)}px, ${(influence.y + ambientY).toFixed(2)}px, 0)`;
     });
   }
 
@@ -183,22 +212,24 @@
     portalGrid.style.transform = `translate3d(0, ${yOffset.toFixed(2)}px, 0)`;
   }
 
-  function bindInteractivePointerDrift() {
+  function updateInteractivePointerDrift() {
     interactiveElements.forEach((element) => {
-      element.classList.add("signal-interactive");
+      const influence = getPointerInfluence(element.getBoundingClientRect(), 3, 20);
+      element.style.setProperty("--signal-pointer-x", `${influence.x.toFixed(2)}px`);
+      element.style.setProperty("--signal-pointer-y", `${influence.y.toFixed(2)}px`);
+    });
+  }
 
-      element.addEventListener("pointermove", (event) => {
-        const rect = element.getBoundingClientRect();
-        const offsetX = ((event.clientX - rect.left) / rect.width - 0.5) * 10;
-        const offsetY = ((event.clientY - rect.top) / rect.height - 0.5) * 10;
+  function bindPortalFieldScroll() {
+    if (!portalFieldLink || !portalGrid) {
+      return;
+    }
 
-        element.style.setProperty("--signal-pointer-x", `${offsetX.toFixed(2)}px`);
-        element.style.setProperty("--signal-pointer-y", `${offsetY.toFixed(2)}px`);
-      });
-
-      element.addEventListener("pointerleave", () => {
-        element.style.setProperty("--signal-pointer-x", "0px");
-        element.style.setProperty("--signal-pointer-y", "0px");
+    portalFieldLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      portalGrid.scrollIntoView({
+        behavior: reducedMotion ? "auto" : "smooth",
+        block: "start"
       });
     });
   }
@@ -224,6 +255,7 @@
     drawFluid(time);
     updateHeroCluster();
     updatePortalGrid();
+    updateInteractivePointerDrift();
     updatePortals(time);
     window.requestAnimationFrame(frame);
   }
@@ -237,7 +269,12 @@
     return;
   }
 
-  bindInteractivePointerDrift();
+  interactiveElements.forEach((element) => {
+    element.classList.add("signal-interactive");
+  });
+
+  updateInteractivePointerDrift();
+  bindPortalFieldScroll();
 
   function emitWave(x, y, speedBoost, strength = 1) {
     waves.push({

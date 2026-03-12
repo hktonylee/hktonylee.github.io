@@ -20,7 +20,11 @@ grep -q 'signal-hero__cluster' assets/js/homepage.js
 grep -q 'function updateHeroCluster' assets/js/homepage.js
 grep -q 'function updatePortalGrid' assets/js/homepage.js
 grep -q 'interactiveElements' assets/js/homepage.js
-grep -q 'function bindInteractivePointerDrift' assets/js/homepage.js
+grep -q 'portalFieldLink' assets/js/homepage.js
+grep -q 'function getPointerInfluence' assets/js/homepage.js
+grep -q 'function updateInteractivePointerDrift' assets/js/homepage.js
+grep -q 'function bindPortalFieldScroll' assets/js/homepage.js
+grep -q 'scrollIntoView' assets/js/homepage.js
 grep -q 'function emitSweepWave' assets/js/homepage.js
 grep -q 'strokeRect' assets/js/homepage.js
 ! grep -q 'const wakes = \[\];' assets/js/homepage.js
