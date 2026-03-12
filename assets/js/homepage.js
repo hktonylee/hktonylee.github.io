@@ -19,6 +19,10 @@
   const squares = [];
   const waves = [];
   const sweepWaves = [];
+  const portalDriftState = new WeakMap();
+  const interactiveDriftState = new WeakMap();
+  const portalDriftMaxSpeed = 240;
+  const interactiveDriftMaxSpeed = 180;
   const pointer = {
     x: window.innerWidth * 0.5,
     y: window.innerHeight * 0.3,
@@ -27,6 +31,7 @@
   };
   let lastAmbientWaveAt = 0;
   let lastSweepWaveAt = 0;
+  let lastFrameAt = 0;
   const portals = Array.from(document.querySelectorAll(".post-portal"));
 
   function resize() {
@@ -166,11 +171,41 @@
     };
   }
 
-  function updatePortals(time) {
+  function clampDriftStep(current, target, maxDelta) {
+    const delta = target - current;
+
+    if (Math.abs(delta) <= maxDelta) {
+      return target;
+    }
+
+    return current + Math.sign(delta) * maxDelta;
+  }
+
+  function stepDriftTowardsTarget(stateMap, element, target, maxSpeed, deltaSeconds) {
+    const current = stateMap.get(element) || { x: 0, y: 0 };
+    const maxDelta = maxSpeed * deltaSeconds;
+    const next = {
+      x: clampDriftStep(current.x, target.x, maxDelta),
+      y: clampDriftStep(current.y, target.y, maxDelta)
+    };
+
+    stateMap.set(element, next);
+
+    return next;
+  }
+
+  function updatePortals(time, deltaSeconds) {
     portals.forEach((portal, index) => {
       const influence = getPointerInfluence(portal.getBoundingClientRect(), 7, 20);
       const ambientY = Math.sin(time + index * 0.7) * 1.25;
-      portal.style.transform = `translate3d(${influence.x.toFixed(2)}px, ${(influence.y + ambientY).toFixed(2)}px, 0)`;
+      const drift = stepDriftTowardsTarget(
+        portalDriftState,
+        portal,
+        { x: influence.x, y: influence.y + ambientY },
+        portalDriftMaxSpeed,
+        deltaSeconds
+      );
+      portal.style.transform = `translate3d(${drift.x.toFixed(2)}px, ${drift.y.toFixed(2)}px, 0)`;
     });
   }
 
@@ -205,18 +240,24 @@
     const rawProgress = (window.scrollY - startOffset) / distance;
     const progress = Math.max(0, Math.min(rawProgress, 1));
     const eased = 1 - Math.pow(1 - progress, 3);
-    const opacity = 0.28 + eased * 0.72;
     const yOffset = (1 - eased) * 22;
 
-    portalGrid.style.opacity = opacity.toFixed(3);
+    portalGrid.classList.toggle("portal-grid--revealed", progress >= 0.14);
     portalGrid.style.transform = `translate3d(0, ${yOffset.toFixed(2)}px, 0)`;
   }
 
-  function updateInteractivePointerDrift() {
+  function updateInteractivePointerDrift(deltaSeconds) {
     interactiveElements.forEach((element) => {
       const influence = getPointerInfluence(element.getBoundingClientRect(), 3, 20);
-      element.style.setProperty("--signal-pointer-x", `${influence.x.toFixed(2)}px`);
-      element.style.setProperty("--signal-pointer-y", `${influence.y.toFixed(2)}px`);
+      const drift = stepDriftTowardsTarget(
+        interactiveDriftState,
+        element,
+        influence,
+        interactiveDriftMaxSpeed,
+        deltaSeconds
+      );
+      element.style.setProperty("--signal-pointer-x", `${drift.x.toFixed(2)}px`);
+      element.style.setProperty("--signal-pointer-y", `${drift.y.toFixed(2)}px`);
     });
   }
 
@@ -228,6 +269,11 @@
     portalFieldLink.addEventListener("click", (event) => {
       event.preventDefault();
       const portalTop = window.scrollY + portalGrid.getBoundingClientRect().top - 60;
+      const nextHash = "#portal-grid";
+
+      if (window.location.hash !== nextHash) {
+        window.history.replaceState(null, "", nextHash);
+      }
 
       window.scrollTo({
         top: Math.max(portalTop, 0),
@@ -238,6 +284,8 @@
 
   function frame(now) {
     const time = now * 0.00018;
+    const deltaSeconds = lastFrameAt ? Math.min((now - lastFrameAt) / 1000, 0.05) : 1 / 60;
+    lastFrameAt = now;
 
     if (now - lastAmbientWaveAt > 500 + Math.random() * 1500) {
       emitWave(
@@ -257,8 +305,8 @@
     drawFluid(time);
     updateHeroCluster();
     updatePortalGrid();
-    updateInteractivePointerDrift();
-    updatePortals(time);
+    updateInteractivePointerDrift(deltaSeconds);
+    updatePortals(time, deltaSeconds);
     window.requestAnimationFrame(frame);
   }
 

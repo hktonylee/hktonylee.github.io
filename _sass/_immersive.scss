@@ -102,13 +102,20 @@ body.signal-post {
 
 .signal-hero__lede,
 .signal-manifesto__text,
-.post-portal__excerpt,
-.signal-post-header__manifesto {
+.post-portal__excerpt {
   margin: 0;
   max-width: 42rem;
   font-size: clamp(1rem, 1.8vw, 1.18rem);
   line-height: 1.7;
   color: $signal-muted;
+}
+
+.signal-hero__lede {
+  text-shadow:
+    0 1px 2px rgba(4, 8, 7, 0.42),
+    0 0 18px rgba(4, 8, 7, 0.18),
+    0 2px 8px rgba(4, 8, 7, 0.3),
+    0 0 30px rgba(4, 8, 7, 0.12);
 }
 
 .signal-hero__actions {
@@ -223,9 +230,8 @@ body.signal-post {
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 1rem;
   padding: 0 clamp(1.25rem, 4vw, 3rem);
-  opacity: 0.28;
   transform: translate3d(0, 22px, 0);
-  will-change: transform, opacity;
+  will-change: transform;
 }
 
 .signal-home-footer {
@@ -240,10 +246,12 @@ body.signal-post {
   gap: 1rem;
   min-height: 19rem;
   padding: 1.3rem;
+  opacity: 0.28;
   overflow: hidden;
   transform: translate3d(0, 0, 0);
   transition:
     transform 260ms ease,
+    opacity 260ms ease,
     border-color 260ms ease,
     background-color 260ms ease;
 }
@@ -275,9 +283,14 @@ body.signal-post {
 
 .post-portal:hover,
 .post-portal:focus-within {
+  opacity: 1;
   border-color: rgba(216, 255, 122, 0.44);
   background: rgba(20, 26, 24, 0.86);
   transform: translateY(-8px);
+}
+
+.portal-grid--revealed .post-portal {
+  opacity: 1;
 }
 
 .post-portal__index {
@@ -432,12 +445,6 @@ body.signal-post {
 
 .signal-post-content a {
   color: $signal-accent-strong;
-}
-
-.signal-post-content code,
-.signal-post-content pre {
-  background: rgba(4, 8, 7, 0.9);
-  border: 1px solid rgba(150, 198, 161, 0.16);
 }
 
 .signal-post-content blockquote {
