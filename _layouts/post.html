@@ -1,15 +1,36 @@
 ---
 layout: default
+page_class: signal-post
+hide_site_chrome: true
 ---
-<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+<article class="signal-post-shell post" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="signal-post-shell__noise" aria-hidden="true"></div>
+  <nav class="signal-post-nav" aria-label="Post navigation">
+    <a class="signal-post-nav__link" href="{{ site.baseurl }}/">Return to signal pool</a>
+    <a class="signal-post-nav__link" href="{{ site.baseurl }}/feed.xml">RSS</a>
+  </nav>
 
-  <header class="post-header">
-    <h1 class="post-title" itemprop="name headline">{{ page.title }}</h1>
-    <p class="post-meta"><time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time>{% if page.author %} • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ page.author }}</span></span>{% endif %}</p>
+  <header class="signal-post-header">
+    <p class="signal-post-header__eyebrow">Interactive field note</p>
+    <h1 class="signal-post-header__title post-title" itemprop="name headline">{{ page.title }}</h1>
+    <p class="signal-post-header__meta post-meta">
+      <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time>{% if page.author %} • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ page.author }}</span></span>{% endif %}
+    </p>
+    <p class="signal-post-header__manifesto">Learning in public, refining the machinery, and applying pressure to AI until it says something useful.</p>
   </header>
 
-  <div class="post-content" itemprop="articleBody">
-    {{ content }}
-  </div>
+  <div class="signal-post-frame">
+    <aside class="signal-post-rail" aria-label="Post markers">
+      <span class="signal-post-rail__label">Signal</span>
+      <span class="signal-post-rail__value">{{ page.date | date: "%Y.%m.%d" }}</span>
+      <span class="signal-post-rail__label">Mode</span>
+      <span class="signal-post-rail__value">Essay / Experiment</span>
+      <span class="signal-post-rail__label">Status</span>
+      <span class="signal-post-rail__value">Always improving</span>
+    </aside>
 
+    <div class="signal-post-content post-content" itemprop="articleBody">
+      {{ content }}
+    </div>
+  </div>
 </article>

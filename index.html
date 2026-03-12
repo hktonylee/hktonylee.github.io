@@ -1,23 +1,79 @@
 ---
 layout: default
+page_class: home-immersive
+full_bleed: true
+hide_site_chrome: true
 ---
 
-<div class="home">
+{% assign featured_posts = site.posts | slice: 0, 6 %}
 
-  <h1 class="page-heading">Posts</h1>
+<div class="home-canvas">
+  <canvas class="fluid-canvas" id="fluid-canvas" aria-hidden="true"></canvas>
+  <div class="home-noise" aria-hidden="true"></div>
 
-  <ul class="post-list">
-    {% for post in site.posts %}
-      <li>
-        <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
+  <header class="signal-hero">
+    <p class="signal-hero__eyebrow">Vanishing Entropy / hktonylee</p>
+    <h1 class="signal-hero__title">Meaning, existence, truth.</h1>
+    <p class="signal-hero__lede">
+      I am always improving, always learning, and professionally harassing AI until it becomes useful.
+      This homepage is the intake valve: essays, prototypes, fragments, and technical artifacts drifting inside one dark system.
+    </p>
+    <div class="signal-hero__actions">
+      <a class="signal-button" href="#portal-grid">Enter the portal field</a>
+      <a class="signal-button signal-button--ghost" href="{{ "/feed.xml" | prepend: site.baseurl }}">Follow via RSS</a>
+    </div>
+  </header>
 
-        <h2>
-          <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{% if post.draft %}[Draft] {% endif %}{{ post.title }}</a>
+  <aside class="signal-status" aria-label="Status panel">
+    <div class="signal-status__block">
+      <span class="signal-status__label">Current mode</span>
+      <strong class="signal-status__value">Learning in public</strong>
+    </div>
+    <div class="signal-status__block">
+      <span class="signal-status__label">Interface bias</span>
+      <strong class="signal-status__value">Dark / thin / precise</strong>
+    </div>
+    <div class="signal-status__block">
+      <span class="signal-status__label">Publishing model</span>
+      <strong class="signal-status__value">Interactive essays</strong>
+    </div>
+  </aside>
+
+  <section class="portal-grid" id="portal-grid" aria-label="Post portals">
+    {% for post in featured_posts %}
+      <article class="post-portal" data-portal-index="{{ forloop.index0 }}">
+        <span class="post-portal__index">0{{ forloop.index }}</span>
+        <p class="post-portal__kicker">{{ post.date | date: "%Y / %b" }}</p>
+        <h2 class="post-portal__title">
+          <a href="{{ post.url | prepend: site.baseurl }}">{% if post.draft %}[Draft] {% endif %}{{ post.title }}</a>
         </h2>
-      </li>
+        <p class="post-portal__excerpt">{{ post.excerpt | strip_html | strip_newlines | truncatewords: 24 }}</p>
+        <div class="post-portal__meta">
+          <span>Portal / {{ forloop.index }}</span>
+          <span>Scroll to expand</span>
+        </div>
+      </article>
     {% endfor %}
-  </ul>
+  </section>
 
-  <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
-
+  <section class="signal-manifesto" aria-label="Publishing manifesto">
+    <div class="signal-manifesto__panel">
+      <p class="signal-manifesto__label">Protocol</p>
+      <p class="signal-manifesto__text">
+        Posts are no longer plain text entries. Each one should earn its own atmosphere, interaction, and narrative rhythm.
+      </p>
+    </div>
+    <div class="signal-manifesto__panel">
+      <p class="signal-manifesto__label">Method</p>
+      <p class="signal-manifesto__text">
+        Thin borders, signal noise, motion, and multimedia are used as structure, not wallpaper.
+      </p>
+    </div>
+    <div class="signal-manifesto__panel">
+      <p class="signal-manifesto__label">Intent</p>
+      <p class="signal-manifesto__text">
+        Make technical writing feel like a controlled collision between notebook, instrument panel, and art installation.
+      </p>
+    </div>
+  </section>
 </div>

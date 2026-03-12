@@ -8,7 +8,7 @@
 # Select build mode via ENV: JEKYLL_ENV=development / production
 
 # Site settings
-title: Dimensional Reduction
+title: Vanishing Entropy @hktonylee
 email: blog@tonylee.hk
 description: > # this means to ignore newlines until "baseurl:"
   What is reality?
@@ -21,4 +21,3 @@ include_google_analytics: true
 
 # Build settings
 markdown: kramdown
-
