@@ -130,21 +130,25 @@ blockquote {
 pre,
 code {
     font-size: 15px;
-    border: 1px solid $grey-color-light;
-    border-radius: 3px;
-    background-color: #eef;
+    border: 1px solid rgba(123, 144, 131, 0.22);
+    border-radius: 10px;
+    background-color: #171c1b;
+    color: #d6ddd7;
 }
 
 code {
-    padding: 1px 5px;
+    padding: 2px 6px;
 }
 
 pre {
-    padding: 8px 12px;
+    padding: 14px 16px;
     overflow-x: auto;
 
     > code {
         border: 0;
+        border-radius: 0;
+        background: transparent;
+        color: inherit;
         padding-right: 0;
         padding-left: 0;
     }

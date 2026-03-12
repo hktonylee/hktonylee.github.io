@@ -321,7 +321,7 @@ body.signal-post {
 .signal-post-shell {
   position: relative;
   min-height: 100vh;
-  padding: clamp(1rem, 3vw, 2rem);
+  padding: 0;
   overflow: hidden;
 }
 
@@ -334,6 +334,10 @@ body.signal-post {
   background-size: auto, 100% 4px;
   opacity: 0.45;
   pointer-events: none;
+}
+
+.signal-post .signal-post-shell__noise {
+  display: none;
 }
 
 .signal-post-nav,
@@ -383,7 +387,7 @@ body.signal-post {
 
 .signal-post-frame {
   display: grid;
-  grid-template-columns: minmax(12rem, 15rem) minmax(0, 1fr);
+  grid-template-columns: minmax(10rem, 13rem) minmax(0, 1fr);
   gap: clamp(1rem, 3vw, 2rem);
   margin-top: 1rem;
   padding: clamp(1rem, 3vw, 2rem);
@@ -441,11 +445,11 @@ body.signal-post {
   .signal-post-nav,
   .signal-post-header,
   .signal-post-frame {
-    max-width: 104rem;
+    max-width: 132rem;
   }
 
   .signal-post-frame {
-    grid-template-columns: minmax(12rem, 14rem) minmax(0, 1fr);
+    grid-template-columns: minmax(8rem, 11rem) minmax(0, 1fr);
   }
 }
 

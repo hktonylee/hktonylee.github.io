@@ -1,3 +1,4 @@
+{% comment %}
 <header class="site-header">
 
   <div class="wrapper">
@@ -13,6 +14,7 @@
         </svg>
       </a>
 
+      {% comment %}
       {% unless page.layout == "post" %}
         <div class="trigger">
           {% for my_page in site.pages %}
@@ -22,8 +24,10 @@
           {% endfor %}
         </div>
       {% endunless %}
+      {% endcomment %}
     </nav>
 
   </div>
 
 </header>
+{% endcomment %}
