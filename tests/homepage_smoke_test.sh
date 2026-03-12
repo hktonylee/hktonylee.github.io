@@ -24,7 +24,8 @@ grep -q 'portalFieldLink' assets/js/homepage.js
 grep -q 'function getPointerInfluence' assets/js/homepage.js
 grep -q 'function updateInteractivePointerDrift' assets/js/homepage.js
 grep -q 'function bindPortalFieldScroll' assets/js/homepage.js
-grep -q 'scrollIntoView' assets/js/homepage.js
+grep -q 'portalTop' assets/js/homepage.js
+grep -q 'window.scrollTo' assets/js/homepage.js
 grep -q 'function emitSweepWave' assets/js/homepage.js
 grep -q 'strokeRect' assets/js/homepage.js
 ! grep -q 'const wakes = \[\];' assets/js/homepage.js

@@ -227,9 +227,11 @@
 
     portalFieldLink.addEventListener("click", (event) => {
       event.preventDefault();
-      portalGrid.scrollIntoView({
-        behavior: reducedMotion ? "auto" : "smooth",
-        block: "start"
+      const portalTop = window.scrollY + portalGrid.getBoundingClientRect().top - 60;
+
+      window.scrollTo({
+        top: Math.max(portalTop, 0),
+        behavior: reducedMotion ? "auto" : "smooth"
       });
     });
   }

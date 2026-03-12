@@ -18,6 +18,8 @@ body.signal-post {
 
 .page-content--full-bleed {
   overflow: hidden;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .home-immersive a,
@@ -226,6 +228,12 @@ body.signal-post {
   will-change: transform, opacity;
 }
 
+.signal-home-footer {
+  display: flex;
+  justify-content: flex-start;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1.25rem, 4vw, 3rem) clamp(3rem, 8vw, 5rem);
+}
+
 .post-portal {
   position: relative;
   display: grid;
@@ -427,6 +435,18 @@ body.signal-post {
   padding-left: 1rem;
   border-left: 1px solid rgba(216, 255, 122, 0.42);
   color: rgba(226, 235, 223, 0.72);
+}
+
+@media screen and (min-width: 1280px) {
+  .signal-post-nav,
+  .signal-post-header,
+  .signal-post-frame {
+    max-width: 104rem;
+  }
+
+  .signal-post-frame {
+    grid-template-columns: minmax(12rem, 14rem) minmax(0, 1fr);
+  }
 }
 
 @media screen and (max-width: 900px) {

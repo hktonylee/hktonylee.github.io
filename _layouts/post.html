@@ -6,12 +6,12 @@ hide_site_chrome: true
 <article class="signal-post-shell post" itemscope itemtype="http://schema.org/BlogPosting">
   <div class="signal-post-shell__noise" aria-hidden="true"></div>
   <nav class="signal-post-nav" aria-label="Post navigation">
-    <a class="signal-post-nav__link" href="{{ site.baseurl }}/">Return to signal pool</a>
+    <a class="signal-post-nav__link" href="{{ site.baseurl }}/">Return to home page</a>
     <a class="signal-post-nav__link" href="{{ site.baseurl }}/feed.xml">RSS</a>
   </nav>
 
   <header class="signal-post-header">
-    <p class="signal-post-header__eyebrow">Interactive field note</p>
+    <p class="signal-post-header__eyebrow">{{ site.title }} / {{ site.github_username }}</p>
     <h1 class="signal-post-header__title post-title" itemprop="name headline">{{ page.title }}</h1>
     <p class="signal-post-header__meta post-meta">
       <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time>{% if page.author %} • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ page.author }}</span></span>{% endif %}
