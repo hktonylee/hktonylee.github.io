@@ -31,8 +31,9 @@ grep -q 'function clampDriftStep' assets/js/homepage.js
 grep -q 'function stepDriftTowardsTarget' assets/js/homepage.js
 grep -q 'function updateInteractivePointerDrift' assets/js/homepage.js
 grep -q 'function bindPortalFieldScroll' assets/js/homepage.js
+grep -q 'window.addEventListener("popstate"' assets/js/homepage.js
 grep -q 'portalTop' assets/js/homepage.js
-grep -q 'history.replaceState' assets/js/homepage.js
+grep -q 'history.pushState' assets/js/homepage.js
 grep -q 'window.scrollTo' assets/js/homepage.js
 grep -q 'function emitSweepWave' assets/js/homepage.js
 grep -q 'strokeRect' assets/js/homepage.js
@@ -56,3 +57,7 @@ grep -q 'background-color: transparent;' _sass/_base.scss
 grep -q 'background: transparent;' _sass/_syntax-highlighting.scss
 ! rg -U -q '\.signal-post-content code,\s*\.signal-post-content pre \{[\s\S]*background:' _sass/_immersive.scss
 ! rg -U -q '\.signal-post-content code,\s*\.signal-post-content pre \{[\s\S]*border:' _sass/_immersive.scss
+grep -q 'scrollbar-width: thin;' _sass/_base.scss
+grep -q 'scrollbar-color:' _sass/_base.scss
+grep -q '::-webkit-scrollbar' _sass/_base.scss
+grep -q '::-webkit-scrollbar-thumb' _sass/_base.scss

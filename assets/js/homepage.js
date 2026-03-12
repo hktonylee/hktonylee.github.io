@@ -266,20 +266,39 @@
       return;
     }
 
-    portalFieldLink.addEventListener("click", (event) => {
-      event.preventDefault();
+    function scrollToPortalGrid() {
       const portalTop = window.scrollY + portalGrid.getBoundingClientRect().top - 60;
-      const nextHash = "#portal-grid";
-
-      if (window.location.hash !== nextHash) {
-        window.history.replaceState(null, "", nextHash);
-      }
 
       window.scrollTo({
         top: Math.max(portalTop, 0),
         behavior: reducedMotion ? "auto" : "smooth"
       });
+    }
+
+    function syncScrollWithHistory() {
+      if (window.location.hash === "#portal-grid") {
+        scrollToPortalGrid();
+        return;
+      }
+
+      window.scrollTo({
+        top: 0,
+        behavior: reducedMotion ? "auto" : "smooth"
+      });
+    }
+
+    portalFieldLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      const nextHash = "#portal-grid";
+
+      if (window.location.hash !== nextHash) {
+        window.history.pushState(null, "", nextHash);
+      }
+
+      scrollToPortalGrid();
     });
+
+    window.addEventListener("popstate", syncScrollWithHistory);
   }
 
   function frame(now) {
