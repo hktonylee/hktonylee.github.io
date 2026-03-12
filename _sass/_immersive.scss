@@ -68,6 +68,14 @@ body.signal-post {
     clamp(3rem, 8vw, 5rem);
 }
 
+.signal-hero__cluster {
+  display: grid;
+  gap: 1.35rem;
+  transform: translate3d(0, 0, 0);
+  transform-origin: 50% 0;
+  will-change: transform, opacity;
+}
+
 .signal-hero__eyebrow,
 .signal-post-header__eyebrow,
 .signal-manifesto__label,
@@ -111,7 +119,30 @@ body.signal-post {
   justify-self: start;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .signal-hero__cluster {
+    transform: none !important;
+    opacity: 1 !important;
+    will-change: auto;
+  }
+
+  .portal-grid {
+    transform: none !important;
+    opacity: 1 !important;
+    will-change: auto;
+  }
+
+  .home-canvas .signal-interactive,
+  .home-canvas .signal-button.signal-interactive {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
 .signal-button {
+  --signal-pointer-x: 0px;
+  --signal-pointer-y: 0px;
+  --signal-button-lift: 0px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -124,6 +155,7 @@ body.signal-post {
   letter-spacing: 0.18em;
   text-transform: uppercase;
   text-decoration: none;
+  transform: translate3d(var(--signal-pointer-x), calc(var(--signal-pointer-y) + var(--signal-button-lift)), 0);
   transition:
     transform 180ms ease,
     border-color 180ms ease,
@@ -132,13 +164,25 @@ body.signal-post {
 
 .signal-button:hover,
 .signal-button:focus {
+  --signal-button-lift: -2px;
   border-color: rgba(216, 255, 122, 0.7);
   background: rgba(24, 32, 28, 0.92);
-  transform: translateY(-2px);
 }
 
 .signal-button--ghost {
   background: transparent;
+}
+
+.home-canvas .signal-interactive {
+  --signal-pointer-x: 0px;
+  --signal-pointer-y: 0px;
+  display: inline-block;
+  transform: translate3d(var(--signal-pointer-x), var(--signal-pointer-y), 0);
+  transition: transform 180ms ease;
+}
+
+.home-canvas .signal-button.signal-interactive {
+  display: inline-flex;
 }
 
 .signal-status {
@@ -177,6 +221,9 @@ body.signal-post {
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 1rem;
   padding: 0 clamp(1.25rem, 4vw, 3rem);
+  opacity: 0.28;
+  transform: translate3d(0, 22px, 0);
+  will-change: transform, opacity;
 }
 
 .post-portal {

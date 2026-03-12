@@ -13,22 +13,24 @@ hide_site_chrome: true
 
   <header class="signal-hero">
     <p class="signal-hero__eyebrow">Vanishing Entropy / hktonylee</p>
-    <h1 class="signal-hero__title">Where Possibility Finds Its Structure</h1>
-    <p class="signal-hero__lede">
-      Engineer building without limits. Pragmatic by default, I use whatever is useful to design systems, ship experiments, and turn ideas into working products.
-      This is the public trail: essays, prototypes, and technical artifacts from a boundless builder still accelerating.
-    </p>
-    <a
-      class="signal-button signal-hero__primary-cta"
-      href="https://github.com/hktonylee/"
-      target="_blank"
-      rel="noreferrer"
-    >
-      Visit GitHub
-    </a>
-    <div class="signal-hero__actions">
-      <a class="signal-button" href="#portal-grid">Enter the portal field</a>
-      <a class="signal-button signal-button--ghost" href="{{ "/feed.xml" | prepend: site.baseurl }}">Follow via RSS</a>
+    <div class="signal-hero__cluster">
+      <h1 class="signal-hero__title">Where Possibility Finds Its Structure</h1>
+      <p class="signal-hero__lede">
+        Engineer building without limits. Pragmatic by default, I use whatever is useful to design systems, ship experiments, and turn ideas into working products.
+        This is the public trail: essays, prototypes, and technical artifacts from a boundless builder still accelerating.
+      </p>
+      <a
+        class="signal-button signal-hero__primary-cta"
+        href="https://github.com/hktonylee/"
+        target="_blank"
+        rel="noreferrer"
+      >
+        Visit GitHub
+      </a>
+      <div class="signal-hero__actions">
+        <a class="signal-button" href="#portal-grid">Enter the portal field</a>
+        <a class="signal-button signal-button--ghost" href="{{ "/feed.xml" | prepend: site.baseurl }}">Follow via RSS</a>
+      </div>
     </div>
   </header>
 
@@ -58,7 +60,6 @@ hide_site_chrome: true
         <p class="post-portal__excerpt">{{ post.excerpt | strip_html | strip_newlines | truncatewords: 24 }}</p>
         <div class="post-portal__meta">
           <span>Portal / {{ forloop.index }}</span>
-          <span>Scroll to expand</span>
         </div>
       </article>
     {% endfor %}

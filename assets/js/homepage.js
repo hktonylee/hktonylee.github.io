@@ -1,6 +1,11 @@
 (() => {
   const root = document.querySelector(".home-canvas");
   const canvas = document.getElementById("fluid-canvas");
+  const heroCluster = document.querySelector(".signal-hero__cluster");
+  const portalGrid = document.querySelector(".portal-grid");
+  const interactiveElements = Array.from(
+    document.querySelectorAll(".home-canvas a[href], .home-canvas button, .home-canvas [role='button']")
+  );
 
   if (!root || !canvas) {
     return;
@@ -140,6 +145,64 @@
     });
   }
 
+  function updateHeroCluster() {
+    if (!heroCluster) {
+      return;
+    }
+
+    const heroRect = heroCluster.getBoundingClientRect();
+    const viewportHeight = window.innerHeight || 1;
+    const startOffset = viewportHeight * 0.08;
+    const distance = viewportHeight * 0.58;
+    const rawProgress = (-heroRect.top - startOffset) / distance;
+    const progress = Math.max(0, Math.min(rawProgress, 1));
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const opacity = 1 - eased * 0.94;
+    const yOffset = eased * -42;
+    const scale = 1 - eased * 0.02;
+
+    heroCluster.style.opacity = opacity.toFixed(3);
+    heroCluster.style.transform = `translate3d(0, ${yOffset.toFixed(2)}px, 0) scale(${scale.toFixed(4)})`;
+  }
+
+  function updatePortalGrid() {
+    if (!portalGrid) {
+      return;
+    }
+
+    const viewportHeight = window.innerHeight || 1;
+    const startOffset = viewportHeight * 0.08;
+    const distance = viewportHeight * 0.58;
+    const rawProgress = (window.scrollY - startOffset) / distance;
+    const progress = Math.max(0, Math.min(rawProgress, 1));
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const opacity = 0.28 + eased * 0.72;
+    const yOffset = (1 - eased) * 22;
+
+    portalGrid.style.opacity = opacity.toFixed(3);
+    portalGrid.style.transform = `translate3d(0, ${yOffset.toFixed(2)}px, 0)`;
+  }
+
+  function bindInteractivePointerDrift() {
+    interactiveElements.forEach((element) => {
+      element.classList.add("signal-interactive");
+
+      element.addEventListener("pointermove", (event) => {
+        const rect = element.getBoundingClientRect();
+        const offsetX = ((event.clientX - rect.left) / rect.width - 0.5) * 10;
+        const offsetY = ((event.clientY - rect.top) / rect.height - 0.5) * 10;
+
+        element.style.setProperty("--signal-pointer-x", `${offsetX.toFixed(2)}px`);
+        element.style.setProperty("--signal-pointer-y", `${offsetY.toFixed(2)}px`);
+      });
+
+      element.addEventListener("pointerleave", () => {
+        element.style.setProperty("--signal-pointer-x", "0px");
+        element.style.setProperty("--signal-pointer-y", "0px");
+      });
+    });
+  }
+
   function frame(now) {
     const time = now * 0.00018;
 
@@ -159,16 +222,22 @@
     }
 
     drawFluid(time);
+    updateHeroCluster();
+    updatePortalGrid();
     updatePortals(time);
     window.requestAnimationFrame(frame);
   }
 
   resize();
+  updateHeroCluster();
+  updatePortalGrid();
 
   if (reducedMotion) {
     drawFluid(0);
     return;
   }
+
+  bindInteractivePointerDrift();
 
   function emitWave(x, y, speedBoost, strength = 1) {
     waves.push({
