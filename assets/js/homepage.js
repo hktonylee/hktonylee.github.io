@@ -32,6 +32,8 @@
   let lastAmbientWaveAt = 0;
   let lastSweepWaveAt = 0;
   let lastFrameAt = 0;
+  let animationFrameId = 0;
+  let isPageActive = !document.hidden && document.hasFocus();
   const portals = Array.from(document.querySelectorAll(".post-portal"));
 
   function resize() {
@@ -301,7 +303,26 @@
     window.addEventListener("popstate", syncScrollWithHistory);
   }
 
+  function stopAnimationLoop() {
+    if (!animationFrameId) {
+      return;
+    }
+
+    window.cancelAnimationFrame(animationFrameId);
+    animationFrameId = 0;
+  }
+
+  function startAnimationLoop() {
+    if (animationFrameId || !isPageActive) {
+      return;
+    }
+
+    lastFrameAt = 0;
+    animationFrameId = window.requestAnimationFrame(frame);
+  }
+
   function frame(now) {
+    animationFrameId = 0;
     const time = now * 0.00018;
     const deltaSeconds = lastFrameAt ? Math.min((now - lastFrameAt) / 1000, 0.05) : 1 / 60;
     lastFrameAt = now;
@@ -326,7 +347,21 @@
     updatePortalGrid();
     updateInteractivePointerDrift(deltaSeconds);
     updatePortals(time, deltaSeconds);
-    window.requestAnimationFrame(frame);
+
+    if (isPageActive) {
+      animationFrameId = window.requestAnimationFrame(frame);
+    }
+  }
+
+  function syncPageActivity() {
+    isPageActive = !document.hidden && document.hasFocus();
+
+    if (isPageActive) {
+      startAnimationLoop();
+      return;
+    }
+
+    stopAnimationLoop();
   }
 
   resize();
@@ -394,6 +429,9 @@
     pointer.active = false;
   });
 
+  document.addEventListener("visibilitychange", syncPageActivity);
+  window.addEventListener("focus", syncPageActivity);
+  window.addEventListener("blur", syncPageActivity);
   window.addEventListener("resize", resize);
-  window.requestAnimationFrame(frame);
+  startAnimationLoop();
 })();
