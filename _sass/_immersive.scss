@@ -246,6 +246,8 @@ body.signal-post {
   gap: 1rem;
   min-height: 19rem;
   padding: 1.3rem;
+  color: inherit;
+  text-decoration: none;
   opacity: 0.28;
   overflow: hidden;
   transform: translate3d(0, 0, 0);
@@ -282,7 +284,10 @@ body.signal-post {
 }
 
 .post-portal:hover,
+.post-portal:focus,
+.post-portal:focus-visible,
 .post-portal:focus-within {
+  text-decoration: none;
   opacity: 1;
   border-color: rgba(216, 255, 122, 0.44);
   background: rgba(20, 26, 24, 0.86);
@@ -302,10 +307,6 @@ body.signal-post {
   max-width: 12ch;
   font-size: clamp(1.55rem, 2.6vw, 2.8rem);
   line-height: 0.98;
-}
-
-.post-portal__title a {
-  text-decoration: none;
 }
 
 .post-portal__meta {

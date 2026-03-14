@@ -4,6 +4,8 @@ set -euo pipefail
 grep -q 'page_class: home-immersive' index.html
 grep -q 'home-canvas' index.html
 grep -q 'portal-grid' index.html
+grep -q '<a class="post-portal" href="{{ post.url | prepend: site.baseurl }}" data-portal-index="{{ forloop.index0 }}">' index.html
+! rg -U -q '<h2 class="post-portal__title">\s*<a href=' index.html
 grep -q 'fluid-canvas' index.html
 grep -q 'Vanishing Entropy / hktonylee' index.html
 ! grep -q 'Signal Pool' index.html
@@ -36,6 +38,9 @@ grep -q 'portalTop' assets/js/homepage.js
 grep -q 'history.pushState' assets/js/homepage.js
 grep -q 'window.scrollTo' assets/js/homepage.js
 grep -q 'function emitSweepWave' assets/js/homepage.js
+grep -q 'const bottomFadeStart = height \* 0.8;' assets/js/homepage.js
+grep -q 'const bottomFadeRange = Math.max(height \* 0.2, 1);' assets/js/homepage.js
+grep -q 'const bottomFade = square.y <= bottomFadeStart ? 1 : Math.max(0, 1 - (square.y - bottomFadeStart) / bottomFadeRange);' assets/js/homepage.js
 grep -q 'strokeRect' assets/js/homepage.js
 ! grep -q 'portalGrid.style.opacity' assets/js/homepage.js
 ! grep -q 'const wakes = \[\];' assets/js/homepage.js
@@ -49,6 +54,7 @@ grep -q 'border: 1px solid $signal-line-strong;' _sass/_immersive.scss
 ! rg -U -q '\.portal-grid \{[\s\S]*?opacity:' _sass/_immersive.scss
 rg -U -q '\.portal-grid--revealed \.post-portal \{[\s\S]*?opacity: 1;' _sass/_immersive.scss
 rg -U -q '\.post-portal \{[\s\S]*?opacity: 0\.28;' _sass/_immersive.scss
+rg -U -q '\.post-portal:hover,\s*\.post-portal:focus,\s*\.post-portal:focus-visible,\s*\.post-portal:focus-within \{[\s\S]*?text-decoration: none;' _sass/_immersive.scss
 grep -q 'opacity: 1;' _sass/_immersive.scss
 ! grep -q 'signal-post-rail' _layouts/post.html
 grep -q 'grid-template-columns: minmax(0, 1fr);' _sass/_immersive.scss

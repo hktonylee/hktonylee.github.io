@@ -35,17 +35,17 @@ hide_site_chrome: true
 
   <section class="portal-grid" id="portal-grid" aria-label="Post portals">
     {% for post in featured_posts %}
-      <article class="post-portal" data-portal-index="{{ forloop.index0 }}">
+      <a class="post-portal" href="{{ post.url | prepend: site.baseurl }}" data-portal-index="{{ forloop.index0 }}">
         <span class="post-portal__index">0{{ forloop.index }}</span>
         <p class="post-portal__kicker">{{ post.date | date: "%Y / %b" }}</p>
         <h2 class="post-portal__title">
-          <a href="{{ post.url | prepend: site.baseurl }}">{% if post.draft %}[Draft] {% endif %}{{ post.title }}</a>
+          {% if post.draft %}[Draft] {% endif %}{{ post.title }}
         </h2>
         <p class="post-portal__excerpt">{{ post.excerpt | strip_html | strip_newlines | truncatewords: 24 }}</p>
         <div class="post-portal__meta">
           <span>Portal / {{ forloop.index }}</span>
         </div>
-      </article>
+      </a>
     {% endfor %}
   </section>
 

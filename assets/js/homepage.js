@@ -71,6 +71,8 @@
   function drawFluid(time) {
     const width = window.innerWidth;
     const height = window.innerHeight;
+    const bottomFadeStart = height * 0.8;
+    const bottomFadeRange = Math.max(height * 0.2, 1);
 
     ctx.clearRect(0, 0, width, height);
     ctx.fillStyle = "rgba(5, 8, 8, 0.18)";
@@ -119,10 +121,11 @@
       });
 
       const totalInfluence = Math.max(waveInfluence, sweepInfluence);
+      const bottomFade = square.y <= bottomFadeStart ? 1 : Math.max(0, 1 - (square.y - bottomFadeStart) / bottomFadeRange);
 
       const size = square.baseSize * (1 + totalInfluence * 0.9);
-      const fillOpacity = square.alpha * (0.03 + opacityLoop * 0.18) + pulse * 0.012 + totalInfluence * 0.12;
-      const strokeOpacity = square.strokeAlpha * (0.42 + opacityLoop * 1.1) + pulse * 0.028 + driftPulse * 0.02 + totalInfluence * 0.26;
+      const fillOpacity = (square.alpha * (0.03 + opacityLoop * 0.18) + pulse * 0.012 + totalInfluence * 0.12) * bottomFade;
+      const strokeOpacity = (square.strokeAlpha * (0.42 + opacityLoop * 1.1) + pulse * 0.028 + driftPulse * 0.02 + totalInfluence * 0.26) * bottomFade;
       const hue = square.hue + opacityLoop * 4 + pulse * 2 + totalInfluence * 10;
       const lightness = 46 + opacityLoop * 10 + pulse * 4 + driftPulse * 2 + totalInfluence * 12;
 
