@@ -20,3 +20,5 @@ include_google_analytics: true
 
 # Build settings
 markdown: kramdown
+exclude:
+  - docs

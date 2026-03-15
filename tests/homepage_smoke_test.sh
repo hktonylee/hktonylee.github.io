@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+bundle exec jekyll build --config _config.yml >/tmp/homepage_smoke_test_jekyll.log 2>&1
+
 grep -q 'page_class: home-immersive' index.html
+! test -e _site/index.md
+grep -q '<title>Vanishing Entropy</title>' _site/index.html
+grep -q 'home-canvas' _site/index.html
+grep -q 'portal-grid' _site/index.html
 grep -q 'home-canvas' index.html
 grep -q 'portal-grid' index.html
 grep -q '<a class="post-portal" href="{{ post.url | prepend: site.baseurl }}" data-portal-index="{{ forloop.index0 }}">' index.html
