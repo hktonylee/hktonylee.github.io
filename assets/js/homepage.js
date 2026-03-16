@@ -19,6 +19,9 @@
   const squares = [];
   const waves = [];
   const sweepWaves = [];
+  let animationProfile = null;
+  const portalRects = new WeakMap();
+  const interactiveRects = new WeakMap();
   const portalDriftState = new WeakMap();
   const interactiveDriftState = new WeakMap();
   const portalDriftMaxSpeed = 240;
@@ -32,20 +35,34 @@
   let lastAmbientWaveAt = 0;
   let lastSweepWaveAt = 0;
   let lastFrameAt = 0;
+  let layoutDirty = true;
   const portals = Array.from(document.querySelectorAll(".post-portal"));
 
+  function createAnimationProfile(width, height) {
+    const area = width * height;
+    const dpr = window.devicePixelRatio || 1;
+    const largeViewport = area >= 1600000;
+    const ratioCap = largeViewport ? 1.1 : area >= 1000000 ? 1.35 : 1.6;
+    const ratio = Math.min(dpr, ratioCap);
+    const step = Math.max(18, Math.min(36, Math.round(width / 34 + area / 360000)));
+
+    return {
+      ratio,
+      step
+    };
+  }
+
   function resize() {
-    const ratio = Math.min(window.devicePixelRatio || 1, 2);
     const width = window.innerWidth;
     const height = window.innerHeight;
+    animationProfile = createAnimationProfile(width, height);
+    const { ratio, step } = animationProfile;
     canvas.width = Math.floor(window.innerWidth * ratio);
     canvas.height = Math.floor(window.innerHeight * ratio);
     canvas.style.width = `${window.innerWidth}px`;
     canvas.style.height = `${window.innerHeight}px`;
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
     squares.length = 0;
-
-    const step = Math.max(18, Math.min(32, Math.round(width / 36)));
     const offset = step * 0.5;
 
     for (let y = offset; y < height + step; y += step) {
@@ -66,6 +83,8 @@
         });
       }
     }
+
+    layoutDirty = true;
   }
 
   function drawFluid(time) {
@@ -107,9 +126,19 @@
       let sweepInfluence = 0;
 
       waves.forEach((wave) => {
-        const distance = Math.hypot(square.x - wave.x, square.y - wave.y);
-        const edgeDistance = Math.abs(distance - wave.radius);
         const band = Math.max(16, wave.width);
+        const maxDistance = wave.radius + band;
+        const minDistance = Math.max(0, wave.radius - band);
+        const deltaX = square.x - wave.x;
+        const deltaY = square.y - wave.y;
+        const distanceSquared = deltaX * deltaX + deltaY * deltaY;
+
+        if (distanceSquared > maxDistance * maxDistance || distanceSquared < minDistance * minDistance) {
+          return;
+        }
+
+        const distance = Math.sqrt(distanceSquared);
+        const edgeDistance = Math.abs(distance - wave.radius);
         const bandInfluence = Math.max(0, 1 - edgeDistance / band) * wave.life * wave.strength;
         waveInfluence = Math.max(waveInfluence, bandInfluence);
       });
@@ -199,7 +228,8 @@
 
   function updatePortals(time, deltaSeconds) {
     portals.forEach((portal, index) => {
-      const influence = getPointerInfluence(portal.getBoundingClientRect(), 7, 20);
+      const portalRect = portalRects.get(portal);
+      const influence = getPointerInfluence(portalRect || portal.getBoundingClientRect(), 7, 20);
       const ambientY = Math.sin(time + index * 0.7) * 1.25;
       const drift = stepDriftTowardsTarget(
         portalDriftState,
@@ -217,7 +247,7 @@
       return;
     }
 
-    const heroRect = heroCluster.getBoundingClientRect();
+    const heroRect = interactiveRects.get(heroCluster) || heroCluster.getBoundingClientRect();
     const viewportHeight = window.innerHeight || 1;
     const startOffset = viewportHeight * 0.08;
     const distance = viewportHeight * 0.58;
@@ -251,7 +281,8 @@
 
   function updateInteractivePointerDrift(deltaSeconds) {
     interactiveElements.forEach((element) => {
-      const influence = getPointerInfluence(element.getBoundingClientRect(), 3, 20);
+      const interactiveRect = interactiveRects.get(element);
+      const influence = getPointerInfluence(interactiveRect || element.getBoundingClientRect(), 3, 20);
       const drift = stepDriftTowardsTarget(
         interactiveDriftState,
         element,
@@ -262,6 +293,24 @@
       element.style.setProperty("--signal-pointer-x", `${drift.x.toFixed(2)}px`);
       element.style.setProperty("--signal-pointer-y", `${drift.y.toFixed(2)}px`);
     });
+  }
+
+  function syncLayoutState() {
+    portals.forEach((portal) => {
+      portalRects.set(portal, portal.getBoundingClientRect());
+    });
+
+    interactiveElements.forEach((element) => {
+      interactiveRects.set(element, element.getBoundingClientRect());
+    });
+
+    if (heroCluster) {
+      interactiveRects.set(heroCluster, heroCluster.getBoundingClientRect());
+    }
+
+    updateHeroCluster();
+    updatePortalGrid();
+    layoutDirty = false;
   }
 
   function bindPortalFieldScroll() {
@@ -309,6 +358,10 @@
     const deltaSeconds = lastFrameAt ? Math.min((now - lastFrameAt) / 1000, 0.05) : 1 / 60;
     lastFrameAt = now;
 
+    if (layoutDirty) {
+      syncLayoutState();
+    }
+
     if (now - lastAmbientWaveAt > 500 + Math.random() * 1500) {
       emitWave(
         Math.random() * window.innerWidth,
@@ -324,9 +377,9 @@
       lastSweepWaveAt = now;
     }
 
-    drawFluid(time);
-    updateHeroCluster();
-    updatePortalGrid();
+    if (!document.hidden) {
+      drawFluid(time);
+    }
     updateInteractivePointerDrift(deltaSeconds);
     updatePortals(time, deltaSeconds);
     window.requestAnimationFrame(frame);
@@ -352,9 +405,9 @@
     waves.push({
       x,
       y,
-      radius: 0,
+      radius: 12 + speedBoost * 0.35,
       speed: (4 + speedBoost * 0.45) * (0.85 + strength * 0.15),
-      width: 240 + speedBoost * 4.4,
+      width: 112 + speedBoost * 2.4,
       life: 0.55 + strength * 0.45,
       strength
     });
@@ -398,5 +451,8 @@
   });
 
   window.addEventListener("resize", resize);
+  window.addEventListener("scroll", () => {
+    layoutDirty = true;
+  }, { passive: true });
   window.requestAnimationFrame(frame);
 })();

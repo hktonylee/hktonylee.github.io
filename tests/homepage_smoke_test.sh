@@ -24,6 +24,14 @@ grep -q 'page-content--full-bleed' _layouts/default.html
 grep -q 'const squares = \[\];' assets/js/homepage.js
 grep -q 'const waves = \[\];' assets/js/homepage.js
 grep -q 'const sweepWaves = \[\];' assets/js/homepage.js
+grep -q 'let animationProfile = null;' assets/js/homepage.js
+grep -q 'function createAnimationProfile' assets/js/homepage.js
+grep -q 'document.hidden' assets/js/homepage.js
+grep -q 'if (!document.hidden) {' assets/js/homepage.js
+grep -q 'drawFluid(time);' assets/js/homepage.js
+! grep -q 'fluidFrameInterval:' assets/js/homepage.js
+grep -q 'radius: 12 + speedBoost \* 0.35,' assets/js/homepage.js
+grep -q 'width: 112 + speedBoost \* 2.4,' assets/js/homepage.js
 grep -q 'signal-hero__cluster' assets/js/homepage.js
 grep -q 'function updateHeroCluster' assets/js/homepage.js
 grep -q 'function updatePortalGrid' assets/js/homepage.js
@@ -37,6 +45,11 @@ grep -q 'const portalDriftMaxSpeed = ' assets/js/homepage.js
 grep -q 'const interactiveDriftMaxSpeed = ' assets/js/homepage.js
 grep -q 'function clampDriftStep' assets/js/homepage.js
 grep -q 'function stepDriftTowardsTarget' assets/js/homepage.js
+grep -q 'const portalRects = new WeakMap();' assets/js/homepage.js
+grep -q 'const interactiveRects = new WeakMap();' assets/js/homepage.js
+grep -q 'let layoutDirty = true;' assets/js/homepage.js
+grep -q 'function syncLayoutState' assets/js/homepage.js
+grep -q 'window.addEventListener("scroll", () => {' assets/js/homepage.js
 grep -q 'function updateInteractivePointerDrift' assets/js/homepage.js
 grep -q 'function bindPortalFieldScroll' assets/js/homepage.js
 grep -q 'window.addEventListener("popstate"' assets/js/homepage.js
