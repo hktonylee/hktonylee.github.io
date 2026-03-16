@@ -31,7 +31,10 @@ grep -q 'if (!document.hidden) {' assets/js/homepage.js
 grep -q 'drawFluid(time);' assets/js/homepage.js
 ! grep -q 'fluidFrameInterval:' assets/js/homepage.js
 grep -q 'radius: 12 + speedBoost \* 0.35,' assets/js/homepage.js
-grep -q 'width: 112 + speedBoost \* 2.4,' assets/js/homepage.js
+grep -q '0.52,' assets/js/homepage.js
+grep -q '1.4' assets/js/homepage.js
+grep -q 'function emitWave(x, y, speedBoost, strength = 1, widthScale = 1) {' assets/js/homepage.js
+grep -q 'width: (112 + speedBoost \* 2.4) \* widthScale,' assets/js/homepage.js
 grep -q 'signal-hero__cluster' assets/js/homepage.js
 grep -q 'function updateHeroCluster' assets/js/homepage.js
 grep -q 'function updatePortalGrid' assets/js/homepage.js
@@ -52,6 +55,7 @@ grep -q 'function syncLayoutState' assets/js/homepage.js
 grep -q 'window.addEventListener("scroll", () => {' assets/js/homepage.js
 grep -q 'function updateInteractivePointerDrift' assets/js/homepage.js
 grep -q 'function bindPortalFieldScroll' assets/js/homepage.js
+grep -q 'root.addEventListener("pointerdown", (event) => {' assets/js/homepage.js
 grep -q 'window.addEventListener("popstate"' assets/js/homepage.js
 grep -q 'portalTop' assets/js/homepage.js
 grep -q 'history.pushState' assets/js/homepage.js

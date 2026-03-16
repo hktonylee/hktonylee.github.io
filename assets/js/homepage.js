@@ -367,7 +367,8 @@
         Math.random() * window.innerWidth,
         Math.random() * window.innerHeight,
         5.0 + Math.random() * 3.0,
-        0.62
+        0.52,
+        1.4
       );
       lastAmbientWaveAt = now;
     }
@@ -401,13 +402,13 @@
   updateInteractivePointerDrift();
   bindPortalFieldScroll();
 
-  function emitWave(x, y, speedBoost, strength = 1) {
+  function emitWave(x, y, speedBoost, strength = 1, widthScale = 1) {
     waves.push({
       x,
       y,
       radius: 12 + speedBoost * 0.35,
       speed: (4 + speedBoost * 0.45) * (0.85 + strength * 0.15),
-      width: 112 + speedBoost * 2.4,
+      width: (112 + speedBoost * 2.4) * widthScale,
       life: 0.55 + strength * 0.45,
       strength
     });
@@ -444,6 +445,11 @@
       emitWave(event.clientX, event.clientY, Math.min(distance * 0.28, 12));
       pointer.lastWaveAt = now;
     }
+  });
+
+  root.addEventListener("pointerdown", (event) => {
+    emitWave(event.clientX, event.clientY, 7.5, 0.74, 1.2);
+    pointer.lastWaveAt = performance.now();
   });
 
   root.addEventListener("pointerleave", () => {
