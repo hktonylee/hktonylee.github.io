@@ -181,6 +181,27 @@ showNoteMessage() {
 }
 
 
+formatFileStat() {
+	path="$1"
+
+	if stat -f '%m;%Sm;%N' "$path" > /dev/null 2>&1; then
+		stat -f '%m;%Sm;%N' "$path"
+		return 0
+	fi
+
+	modifiedEpoch=`stat -c '%Y' "$path"` || return 1
+	modifiedDate=`date -d "@$modifiedEpoch" '+%b %e %H:%M:%S %Y' 2> /dev/null || date -r "$modifiedEpoch" '+%b %e %H:%M:%S %Y'` || return 1
+	printf '%s;%s;%s\n' "$modifiedEpoch" "$modifiedDate" "$path"
+}
+
+
+listRecentFiles() {
+	for path in *; do
+		formatFileStat "$path"
+	done | sort -nr | head -30
+}
+
+
 ##########################################################################################
 
 
@@ -243,7 +264,7 @@ listDrafts() {
 		return 1
 	else
 		cd "$DRAFTS_DIR";
-		files=`stat -f '%m;%Sm;%N' * | sort -nr | head -30`		# only get the newest 30 items
+		files=`listRecentFiles`		# only get the newest 30 items
 		cd - > /dev/null 2>&1;
 		
 		DRAFTS_DATES=`echo "$files" | cut -d';' -f2`
@@ -279,7 +300,7 @@ listPosts() {
 		return 1
 	else
 		cd "$POSTS_DIR";
-		files=`stat -f '%m;%Sm;%N' * | sort -nr | head -30`		# only get the newest 30 items
+		files=`listRecentFiles`		# only get the newest 30 items
 		cd - > /dev/null 2>&1;
 		
 		POSTS_DATES=`echo "$files" | cut -d';' -f2`
@@ -385,7 +406,7 @@ runFeaturePublish() {
 	promptDraft "Publish draft" "Are you sure want to publish?" | {
 		answer=`cat`
 		if [ "$answer" != "" ]; then
-			runJekyllCmd publish "${DRAFTS_DIR}/${answer}"
+			runJekyllCmd publish "_drafts/${answer}"
 		fi
 	}
 }
@@ -397,7 +418,7 @@ runFeatureUnpublish() {
 	promptPost "Unpublish post" "Are you sure want to unpublish?" | {
 		answer=`cat`
 		if [ "$answer" != "" ]; then
-			runJekyllCmd unpublish "${POSTS_DIR}/${answer}"
+			runJekyllCmd unpublish "_posts/${answer}"
 		fi
 	}
 }

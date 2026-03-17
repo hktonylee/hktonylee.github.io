@@ -1,8 +1,8 @@
 ---
 layout: post
 title: Automating Automation
+date: 2026-03-17 10:50 -0700
 ---
-
 ## Automation never felt small
 
 When people talk about automation, they often describe it as a way to save time. That is true, but it always felt too small to me. Saving time is just the first visible effect. The more interesting part is that automation changes what kind of work remains for humans, and over the years I found that my own definition of automation kept expanding.
