@@ -1,0 +1,8 @@
+[tools]
+ruby = "2.6.5"
+
+[env]
+# Mimics a virtualenv by keeping gems in the project folder
+GEM_HOME = "{{ config_root }}/.gems"
+PATH = "{{ config_root }}/.gems/bin:{{ env.PATH }}"
+
