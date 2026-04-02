@@ -1,8 +1,8 @@
 ---
 layout: post
 title: First 3D Modelling
+date: 2026-04-02 13:54 -0700
 ---
-
 3D printing has been getting more popular recently. I saw an advertisement from some manufacturer in China offering super low-cost 3D printing, something like $2 for a small item including shipping. Plus, I had some free time. Why not give it a try?
 
 I started learning Autodesk Fusion. The last time I used CAD software was about 20 years ago, back in high school. I did not expect to use CAD software again after that, but here I am ;)
