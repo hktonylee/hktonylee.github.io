@@ -1,6 +1,6 @@
 ---
 layout: post
-title: AI and Fusion
+title: AI & Fusion
 date: 2026-04-09 13:34 -0700
 ---
 Three months ago, I tried adding MCP support to Autodesk Fusion: [hktonylee/Autodesk-Fusion-360-MCP-Server](https://github.com/hktonylee/Autodesk-Fusion-360-MCP-Server). It worked as an MCP server and could add constraints and solids. However, it still failed on many simple instructions. For example, if you asked it to build a DNA-like helix, it produced a helix but hard-coded all locations (non-parametric). If you asked it to build a hexagon, it did not use the polygon tool and instead hard-coded six lines. In practice, that is not very useful for 3D modeling.
